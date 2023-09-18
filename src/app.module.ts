@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ProductModule } from './product/product.module';
+import { CategoryModule } from './category/category.module';
 import config from './config';
 import * as Joi from 'joi';
 
@@ -17,6 +18,7 @@ import * as Joi from 'joi';
       }),
     }),
     ProductModule,
+    CategoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

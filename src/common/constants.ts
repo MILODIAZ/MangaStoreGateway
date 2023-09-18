@@ -1,7 +1,5 @@
 export enum RabbitMQ {
-  ProductQueue = 'products',
-  CategoryQueue = 'categories',
-  BranchQueue = 'branch',
+  CatalogQueue = 'catalog',
 }
 
 export enum ProductMSG {
@@ -9,7 +7,9 @@ export enum ProductMSG {
   FIND_ALL = 'FIND_PRODUCTS',
   FIND_ONE = 'FIND_PRODUCT',
   UPDATE = 'UPDATE_PRODUCT',
+  ADD_CAT_PROD = 'ADD_CATEGORY_FROM_PRODUCT',
   DELETE = 'DELETE_PRODUCT',
+  DELETE_CAT_PROD = 'DELETE_CATEGORY_FROM_PRODUCT',
 }
 
 export enum BranchMSG {

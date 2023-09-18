@@ -16,7 +16,7 @@ export class ClientProxyMangaStore {
       transport: Transport.RMQ,
       options: {
         urls: this.config.get('AMQP_URL'),
-        queue: RabbitMQ.ProductQueue,
+        queue: RabbitMQ.CatalogQueue,
       },
     });
   }
@@ -26,7 +26,7 @@ export class ClientProxyMangaStore {
       transport: Transport.RMQ,
       options: {
         urls: this.config.get('AMQP_URL'),
-        queue: RabbitMQ.CategoryQueue,
+        queue: RabbitMQ.CatalogQueue,
       },
     });
   }
@@ -36,7 +36,7 @@ export class ClientProxyMangaStore {
       transport: Transport.RMQ,
       options: {
         urls: this.config.get('AMQP_URL'),
-        queue: RabbitMQ.BranchQueue,
+        queue: RabbitMQ.CatalogQueue,
       },
     });
   }
