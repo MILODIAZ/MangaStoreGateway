@@ -56,7 +56,7 @@ export class CreateProductDto {
   readonly branchesIds: number[];
 }
 
-export class UpdateProductDto extends PartialType(CreateProductDto) {}
+export class UpdateProductDto extends PartialType(CreateProductDto) { }
 
 export class FilterProductsDto {
   @IsOptional()
@@ -78,4 +78,23 @@ export class FilterProductsDto {
   @IsOptional()
   @IsNotEmpty()
   search: string;
+}
+
+export class CreateProductStockDto {
+  @IsNumber()
+  @NotEquals(null)
+  @IsPositive()
+  readonly branchId: number;
+
+  @IsNumber()
+  @NotEquals(null)
+  @IsPositive()
+  readonly productId: number;
+}
+
+export class UpdateProductStockDto {
+  @IsNumber()
+  @NotEquals(null)
+  @NotEquals(0)
+  readonly stock: number;
 }

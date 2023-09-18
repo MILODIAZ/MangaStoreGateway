@@ -4,6 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ProductModule } from './product/product.module';
 import { CategoryModule } from './category/category.module';
+import { BranchModule } from './branch/branch.module';
 import config from './config';
 import * as Joi from 'joi';
 
@@ -19,6 +20,7 @@ import * as Joi from 'joi';
     }),
     ProductModule,
     CategoryModule,
+    BranchModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -11,13 +11,13 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 
 import { ProductMSG } from 'src/common/constants';
-import { CreateProductDto, UpdateProductDto } from './product.dto';
+import { CreateProductDto, UpdateProductDto, CreateProductStockDto, UpdateProductStockDto } from './product.dto';
 import { ClientProxyMangaStore } from 'src/common/proxy/client-proxy';
 
 @ApiTags('products')
 @Controller('products')
 export class ProductController {
-  constructor(private readonly clientProxy: ClientProxyMangaStore) {}
+  constructor(private readonly clientProxy: ClientProxyMangaStore) { }
   private clientProxyProduct = this.clientProxy.clientProxyProducts();
 
   @Get()
@@ -35,12 +35,25 @@ export class ProductController {
     return this.clientProxyProduct.send(ProductMSG.CREATE, payload);
   }
 
+  @Post('stock')
+  createStock(@Body() payload: CreateProductStockDto) {
+    return this.clientProxyProduct.send(ProductMSG.CREATE_STOCK, payload);
+  }
+
   @Put(':id')
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() payload: UpdateProductDto,
   ) {
     return this.clientProxyProduct.send(ProductMSG.UPDATE, { id, payload });
+  }
+
+  @Put('stock/:idStock')
+  updateStock(
+    @Param('idStock', ParseIntPipe) idStock: number,
+    @Body() payload: UpdateProductStockDto,
+  ) {
+    return this.clientProxyProduct.send(ProductMSG.UPDATE_STOCK, { idStock, payload });
   }
 
   @Put(':id/category/:categoryId')
