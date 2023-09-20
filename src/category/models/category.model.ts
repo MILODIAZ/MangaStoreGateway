@@ -1,17 +1,22 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Product } from 'src/product/models/product.model';
 
 @ObjectType()
 export class Category {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    @Field(type => Int)
-    id: number;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  @Field((type) => Int)
+  id: number;
 
-    @Field()
-    name: string;
+  @Field()
+  name: string;
 
-    @Field()
-    createAt: string;
+  @Field()
+  createAt: string;
 
-    @Field()
-    updateAt: string;
+  @Field()
+  updateAt: string;
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  @Field((type) => [Product], { nullable: 'items' })
+  products: Product[];
 }

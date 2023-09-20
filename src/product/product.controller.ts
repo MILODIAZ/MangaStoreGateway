@@ -7,22 +7,29 @@ import {
   ParseIntPipe,
   Post,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { ProductMSG } from 'src/common/constants';
-import { CreateProductDto, UpdateProductDto, CreateProductStockDto, UpdateProductStockDto } from './product.dto';
+import {
+  CreateProductDto,
+  UpdateProductDto,
+  CreateProductStockDto,
+  UpdateProductStockDto,
+  FilterProductsDto,
+} from './product.dto';
 import { ClientProxyMangaStore } from 'src/common/proxy/client-proxy';
 
 @ApiTags('products')
 @Controller('products')
 export class ProductController {
-  constructor(private readonly clientProxy: ClientProxyMangaStore) { }
+  constructor(private readonly clientProxy: ClientProxyMangaStore) {}
   private clientProxyProduct = this.clientProxy.clientProxyProducts();
 
   @Get()
-  findAll() {
-    return this.clientProxyProduct.send(ProductMSG.FIND_ALL, '');
+  findAll(@Query() params: FilterProductsDto) {
+    return this.clientProxyProduct.send(ProductMSG.FIND_ALL, params);
   }
 
   @Get(':id')
@@ -53,7 +60,10 @@ export class ProductController {
     @Param('idStock', ParseIntPipe) idStock: number,
     @Body() payload: UpdateProductStockDto,
   ) {
-    return this.clientProxyProduct.send(ProductMSG.UPDATE_STOCK, { idStock, payload });
+    return this.clientProxyProduct.send(ProductMSG.UPDATE_STOCK, {
+      idStock,
+      payload,
+    });
   }
 
   @Put(':id/category/:categoryId')

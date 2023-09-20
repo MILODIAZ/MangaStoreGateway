@@ -2,6 +2,14 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Category {
+  id: Int!
+  name: String!
+  createAt: String!
+  updateAt: String!
+  products: [Product]!
+}
+
 type Product {
   id: Int!
   name: String!
@@ -14,13 +22,7 @@ type Product {
   totalStock: Int!
   createAt: String!
   updateAt: String!
-}
-
-type Category {
-  id: Int!
-  name: String!
-  createAt: String!
-  updateAt: String!
+  categories: [Category]!
 }
 
 type Query {

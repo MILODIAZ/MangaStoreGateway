@@ -56,28 +56,32 @@ export class CreateProductDto {
   readonly branchesIds: number[];
 }
 
-export class UpdateProductDto extends PartialType(CreateProductDto) { }
+export class UpdateProductDto extends PartialType(CreateProductDto) {}
 
 export class FilterProductsDto {
   @IsOptional()
   @IsPositive()
-  limit: number;
+  limit?: number;
 
   @IsOptional()
   @Min(0)
-  offset: number;
+  offset?: number;
 
   @IsOptional()
   @IsPositive()
-  minPrice: number;
+  minPrice?: number;
 
   @ValidateIf((item) => item.minPrice)
   @IsPositive()
-  maxPrice: number;
+  maxPrice?: number;
 
   @IsOptional()
   @IsNotEmpty()
-  search: string;
+  search?: string;
+
+  @IsOptional()
+  @IsPositive()
+  categoryId?: number;
 }
 
 export class CreateProductStockDto {
