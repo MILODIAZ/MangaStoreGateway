@@ -20,4 +20,12 @@ export class ProductsService {
     const { data } = response;
     return data;
   }
+
+  async findOne(id: number): Promise<Product> {
+    const response = await this.clientProxyProduct
+      .send(ProductMSG.FIND_ONE, id)
+      .toPromise();
+    const { data } = response;
+    return data;
+  }
 }

@@ -6,13 +6,17 @@ import { ProductsService } from './products.service';
 import { ClientProxyMangaStore } from 'src/common/proxy/client-proxy';
 import { CategoryModule } from 'src/category/category.module';
 import { CategoriesService } from 'src/category/categories.service';
+import { BranchModule } from 'src/branch/branch.module';
+import { StockItemsService } from 'src/branch/stock-item.service';
+
 @Module({
-  imports: [ProxyModule, CategoryModule],
+  imports: [ProxyModule, CategoryModule, BranchModule],
   providers: [
     ProductsResolver,
     ProductsService,
     ClientProxyMangaStore,
     CategoriesService,
+    StockItemsService,
   ],
   controllers: [ProductController],
   exports: [ProductsService],

@@ -29,6 +29,9 @@ export class Product {
   @Field()
   isBlocked: boolean;
 
+  @Field()
+  isFavourite: boolean;
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   @Field((type) => Int)
   totalStock: number;

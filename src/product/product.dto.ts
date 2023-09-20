@@ -41,6 +41,10 @@ export class CreateProductDto {
   @IsOptional()
   readonly isBlocked: boolean;
 
+  @IsBoolean()
+  @IsOptional()
+  readonly isFavourite: boolean;
+
   @IsOptional()
   @IsNotEmpty()
   @IsArray()

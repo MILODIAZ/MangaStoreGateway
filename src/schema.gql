@@ -19,13 +19,30 @@ type Product {
   price: Int!
   image: String
   isBlocked: Boolean!
+  isFavourite: Boolean!
   totalStock: Int!
   createAt: String!
   updateAt: String!
   categories: [Category]!
 }
 
+type Branch {
+  id: Int!
+  name: String!
+  createAt: String!
+  updateAt: String!
+}
+
+type StockItem {
+  id: Int!
+  branch: Branch!
+  product: Product!
+  stock: Int!
+}
+
 type Query {
   products: [Product!]!
   categories: [Category!]!
+  branches: [Branch!]!
+  stockItems: [StockItem!]!
 }
