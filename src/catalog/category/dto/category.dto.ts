@@ -1,9 +1,12 @@
+import { InputType, Field } from '@nestjs/graphql';
 import { IsString, IsNotEmpty, MaxLength, NotEquals } from 'class-validator';
 
-export class BranchDto {
+@InputType()
+export class categoryInput {
+  @Field()
   @IsString()
   @NotEquals(null)
   @IsNotEmpty()
   @MaxLength(50)
-  readonly name: string;
+  name: string;
 }

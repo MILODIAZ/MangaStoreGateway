@@ -1,5 +1,6 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Category } from 'src/category/models/category.model';
+import { StockItem } from 'src/catalog/branch/models/stock-item.model';
+import { Category } from 'src/catalog/category/models/category.model';
 
 @ObjectType()
 export class Product {
@@ -45,4 +46,8 @@ export class Product {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   @Field((type) => [Category], { nullable: 'items' })
   categories: Category[];
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  @Field((type) => [StockItem], { nullable: 'items' })
+  stockItems: StockItem[];
 }

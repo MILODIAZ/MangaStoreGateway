@@ -1,4 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { StockItem } from './stock-item.model';
 
 @ObjectType()
 export class Branch {
@@ -14,4 +15,8 @@ export class Branch {
 
   @Field()
   updateAt: string;
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  @Field((type) => [StockItem], { nullable: 'items' })
+  stockItems: StockItem[];
 }

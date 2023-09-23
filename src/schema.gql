@@ -7,7 +7,7 @@ type Category {
   name: String!
   createAt: String!
   updateAt: String!
-  products: [Product]!
+  products(limit: Int, offset: Int, minPrice: Int, maxPrice: Int, search: String, categoryId: Int): [Product]!
 }
 
 type Product {
@@ -24,6 +24,16 @@ type Product {
   createAt: String!
   updateAt: String!
   categories: [Category]!
+  stockItems: [StockItem]!
+}
+
+type StockItem {
+  id: Int!
+  branch: Branch!
+  product: Product!
+  createAt: String!
+  updateAt: String!
+  stock: Int!
 }
 
 type Branch {
@@ -31,18 +41,65 @@ type Branch {
   name: String!
   createAt: String!
   updateAt: String!
-}
-
-type StockItem {
-  id: Int!
-  branch: Branch!
-  product: Product!
-  stock: Int!
+  stockItems: [StockItem]!
 }
 
 type Query {
-  products: [Product!]!
-  categories: [Category!]!
   branches: [Branch!]!
+  branch(id: Int!): Branch!
   stockItems: [StockItem!]!
+  stockItem(id: Int!): StockItem!
+  categories: [Category!]!
+  category(id: Int!): Category!
+  products(limit: Int, offset: Int, minPrice: Int, maxPrice: Int, search: String, categoryId: Int): [Product!]!
+  product(id: Int!): Product!
+}
+
+type Mutation {
+  createBranch(data: branchInput!): Branch!
+  updateBranch(data: branchInput!, id: Int!): Branch!
+  deleteBranch(id: Int!): Branch!
+  createStockItem(productId: Int!, branchId: Int!): StockItem!
+  updateStockItem(data: updateStockItemInput!, id: Int!): StockItem!
+  deleteStockItem(id: Int!): StockItem!
+  createCategory(data: categoryInput!): Category!
+  updateCategory(data: categoryInput!, id: Int!): Category!
+  deleteCategory(id: Int!): Category!
+  addProductToCategory(categoryId: Int!, productId: Int!): Product!
+  removeProductFromCategory(categoryId: Int!, productId: Int!): Product!
+  createProduct(data: createProductInput!): Product!
+  updateProduct(data: updateProductInput!, id: Int!): Product!
+  deleteProduct(id: Int!): Product!
+  addCategoryToProduct(categoryId: Int!, productId: Int!): Category!
+  removeCategoryFromProduct(categoryId: Int!, productId: Int!): Category!
+}
+
+input branchInput {
+  name: String!
+}
+
+input updateStockItemInput {
+  stock: Float!
+}
+
+input categoryInput {
+  name: String!
+}
+
+input createProductInput {
+  name: String!
+  description: String
+  price: Int!
+  image: String
+  isBlocked: Boolean
+  isFavourite: Boolean
+}
+
+input updateProductInput {
+  name: String
+  description: String
+  price: Int
+  image: String
+  isBlocked: Boolean
+  isFavourite: Boolean
 }

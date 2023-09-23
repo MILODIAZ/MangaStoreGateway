@@ -11,38 +11,7 @@ import { RabbitMQ } from '../constants';
 export class ClientProxyMangaStore {
   constructor(private readonly config: ConfigService) {}
 
-  //REFACTORIZAR, SOLO 1 CLIENTE POR MICROSERVICIO
-  clientProxyProducts(): ClientProxy {
-    return ClientProxyFactory.create({
-      transport: Transport.RMQ,
-      options: {
-        urls: this.config.get('AMQP_URL'),
-        queue: RabbitMQ.CatalogQueue,
-      },
-    });
-  }
-
-  clientProxyCategories(): ClientProxy {
-    return ClientProxyFactory.create({
-      transport: Transport.RMQ,
-      options: {
-        urls: this.config.get('AMQP_URL'),
-        queue: RabbitMQ.CatalogQueue,
-      },
-    });
-  }
-
-  clientProxyBranches(): ClientProxy {
-    return ClientProxyFactory.create({
-      transport: Transport.RMQ,
-      options: {
-        urls: this.config.get('AMQP_URL'),
-        queue: RabbitMQ.CatalogQueue,
-      },
-    });
-  }
-
-  clientProxyStockItems(): ClientProxy {
+  clientProxyCatalog(): ClientProxy {
     return ClientProxyFactory.create({
       transport: Transport.RMQ,
       options: {
