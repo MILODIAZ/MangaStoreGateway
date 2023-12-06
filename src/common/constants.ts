@@ -1,5 +1,6 @@
 export enum RabbitMQ {
   CatalogQueue = 'catalog',
+  AuthorizationQueue = 'authorization',
 }
 
 export enum ProductMSG {
@@ -42,4 +43,13 @@ export enum StockItemMSG {
   DELETE = 'DELETE_STOCKITEM',
   GET_BRANCH = 'GET_BRANCH',
   GET_PRODUCT = 'GET_PRODUCT',
+}
+
+export enum UserMSG {
+  CREATE = 'CREATE_USER',
+  FIND_ALL = 'FIND_USERS',
+  FIND_ONE = 'FIND_USER',
+  UPDATE = 'UPDATE_USER',
+  DELETE = 'DELETE_USER',
+  JWT = 'UPDATE_JWT',
 }

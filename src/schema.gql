@@ -44,6 +44,19 @@ type Branch {
   stockItems: [StockItem]!
 }
 
+type User {
+  id: Int!
+  userName: String!
+  name: String!
+  lastName: String!
+  email: String!
+}
+
+type AuthResult {
+  user: User!
+  jwt: String
+}
+
 type Query {
   branches: [Branch!]!
   branch(id: Int!): Branch!
@@ -53,6 +66,8 @@ type Query {
   category(id: Int!): Category!
   products(limit: Int, offset: Int, minPrice: Int, maxPrice: Int, search: String, categoryId: Int): [Product!]!
   product(id: Int!): Product!
+  users: [User!]!
+  user(id: Int!): User!
 }
 
 type Mutation {
@@ -72,6 +87,10 @@ type Mutation {
   deleteProduct(id: Int!): Product!
   addCategoryToProduct(categoryId: Int!, productId: Int!): Category!
   removeCategoryFromProduct(categoryId: Int!, productId: Int!): Category!
+  createUser(data: userDto!): User!
+  updateUser(data: updateUserDto!, id: Int!): User!
+  deleteUser(id: Int!): User!
+  login(data: loginDto!): AuthResult!
 }
 
 input branchInput {
@@ -102,4 +121,24 @@ input updateProductInput {
   image: String
   isBlocked: Boolean
   isFavourite: Boolean
+}
+
+input userDto {
+  name: String!
+  lastName: String!
+  userName: String!
+  email: String!
+  password: String!
+}
+
+input updateUserDto {
+  name: String!
+  lastName: String!
+  userName: String!
+  email: String!
+}
+
+input loginDto {
+  userName: String!
+  password: String!
 }

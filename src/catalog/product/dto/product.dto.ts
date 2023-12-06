@@ -10,7 +10,6 @@ import {
   IsPositive,
   IsUrl,
   Min,
-  ValidateIf,
 } from 'class-validator';
 
 @InputType()
@@ -115,7 +114,7 @@ export class filterProductArgs {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   @Field((type) => Int, { nullable: true })
-  @ValidateIf((item) => item.minPrice)
+  @IsOptional()
   @IsPositive()
   maxPrice?: number;
 
