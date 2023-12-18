@@ -1,6 +1,8 @@
 export enum RabbitMQ {
   CatalogQueue = 'catalog',
   AuthorizationQueue = 'authorization',
+  CartQueue = 'cart',
+  PaymentQueue = 'payment',
 }
 
 export enum ProductMSG {
@@ -13,6 +15,7 @@ export enum ProductMSG {
   GET_STOCK_ITEMS = 'GET_STOCK_ITEMS_FROM_PRODUCT',
   ADD_CATEGORY = 'ADD_CATEGORY',
   REMOVE_CATEGORY = 'REMOVE_CATEGORY',
+  PURCHASE = 'PURCHASE',
 }
 
 export enum BranchMSG {
@@ -52,4 +55,9 @@ export enum UserMSG {
   UPDATE = 'UPDATE_USER',
   DELETE = 'DELETE_USER',
   JWT = 'UPDATE_JWT',
+}
+
+export enum PaymentMSG {
+  TRANSACTION = 'TRANSACTION',
+  CONFIRM_PAYMENT = 'CONFIRM_PAYMENT',
 }

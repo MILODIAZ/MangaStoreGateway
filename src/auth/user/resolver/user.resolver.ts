@@ -1,10 +1,9 @@
 import {
   Args,
+  InputType,
   Int,
   Mutation,
-  Parent,
   Query,
-  ResolveField,
   Resolver,
 } from '@nestjs/graphql';
 import { ObjectType, Field } from '@nestjs/graphql';
@@ -23,6 +22,99 @@ class AuthResult {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   @Field((type) => String, { nullable: true })
   jwt: string;
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  @Field((type) => [CartItem], { nullable: true }) // Cambiado a [Object]
+  cart: CartItem[];
+}
+
+@ObjectType()
+class orderUser {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  @Field((type) => Int)
+  id: number;
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  @Field((type) => String, { nullable: true })
+  username: string;
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  @Field((type) => [CartItem], { nullable: true }) // Cambiado a [Object]
+  cart: CartItem[];
+}
+
+@ObjectType()
+class Orden {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  @Field((type) => Int)
+  id: number;
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  @Field((type) => Int)
+  user_id: number;
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  @Field((type) => orderUser)
+  user: orderUser;
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  @Field((type) => [CartItem], { nullable: true })
+  items: CartItem[];
+}
+
+@ObjectType()
+class CartProduct {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  @Field((type) => Int)
+  id: number;
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  @Field((type) => String, { nullable: true })
+  name: string;
+}
+
+@ObjectType()
+class CartItem {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  @Field((type) => Int)
+  id: number;
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  @Field((type) => Int)
+  product_id: number;
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  @Field((type) => CartProduct)
+  product: CartProduct;
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  @Field((type) => Int)
+  quantity: number;
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  @Field((type) => Int)
+  order: number;
+}
+
+@InputType()
+export class productQty {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  @Field((type) => String, { nullable: true })
+  name: string;
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  @Field((type) => Int)
+  quantity: number;
+}
+
+@ObjectType()
+class Transaction {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  @Field((type) => String, { nullable: true })
+  token: string;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  @Field((type) => String, { nullable: true })
+  url: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -46,6 +138,12 @@ export class UsersResolver {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  @Query((returns) => [Orden])
+  async getOrders(@Args('userName', { type: () => String }) userName: string) {
+    return this.usersService.getOrders(userName);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   @Mutation((returns) => User)
   async createUser(@Args('data') data: userDto) {
     return this.usersService.create(data);
@@ -55,29 +153,56 @@ export class UsersResolver {
   @Mutation((returns) => User)
   async updateUser(
     @Args('data') data: updateUserDto,
-    @Args('id', { type: () => Int }) id: number,
+    @Args('userName', { type: () => String }) userName: string,
   ) {
-    return this.usersService.update(id, data);
+    return this.usersService.update(userName, data);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   @Mutation((returns) => User)
-  async deleteUser(@Args('id', { type: () => Int }) id: number) {
-    return this.usersService.delete(id);
+  async deleteUser(@Args('userName', { type: () => String }) userName: string) {
+    return this.usersService.delete(userName);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   @Mutation((returns) => AuthResult)
   async login(@Args('data') data: loginDto) {
-    const user = await this.usersService.validateUser(data);
+    const result = await this.usersService.validateUser(data);
+    const user = result.response1;
+    const cart = result.jsonData.cart;
     const jwt = this.authService.generateJWT(user);
-    console.log(jwt);
     if (jwt.access_token) {
       const userName = data.userName;
       const token: string = jwt.access_token;
       user.jwt = jwt.access_token;
       await this.usersService.updateJWT(userName, token);
     }
-    return { user, jwt: jwt.access_token };
+    console.log(cart);
+    return { user, jwt: jwt.access_token, cart };
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  @Mutation((returns) => String)
+  async purchase(
+    @Args('userName', { type: () => String }) userName: string,
+    @Args('itemsIDs', { type: () => [Int] }) itemIDs: number[],
+    @Args('productNames', { type: () => [productQty] })
+    productNames: productQty[],
+  ) {
+    return this.usersService.purchase(userName, itemIDs, productNames);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  @Mutation((returns) => Transaction)
+  async createTransaction(@Args('amount', { type: () => Int }) amount: number) {
+    return this.usersService.createTransaction(amount);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  @Mutation((returns) => String)
+  async confirmTransaction(
+    @Args('token', { type: () => String }) token: string,
+  ) {
+    return this.usersService.confirmTransaction(token);
   }
 }

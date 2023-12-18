@@ -9,6 +9,8 @@ import { CategoriesResolver } from './category/resolver/categories.resolver';
 import { CategoriesService } from './category/service/categories.service';
 import { ProductsResolver } from './product/resolver/product.resolver';
 import { ProductsService } from './product/service/product.service';
+import { ProductItemResolver } from './product/resolver/productItem.resolver';
+import { ProductItemsService } from './product/service/productItem.service';
 
 @Module({
   imports: [ProxyModule],
@@ -22,6 +24,8 @@ import { ProductsService } from './product/service/product.service';
     CategoriesService,
     ProductsResolver,
     ProductsService,
+    ProductItemResolver,
+    ProductItemsService,
   ],
 })
 export class CatalogModule {}

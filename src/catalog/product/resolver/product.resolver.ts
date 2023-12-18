@@ -57,14 +57,18 @@ export class ProductsResolver {
   async updateProduct(
     @Args('data') data: updateProductInput,
     @Args('id', { type: () => Int }) id: number,
+    @Args('productName', { type: () => String }) productName: string,
   ) {
-    return this.productsService.update(id, data);
+    return this.productsService.update(productName, id, data);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   @Mutation((returns) => Product)
-  async deleteProduct(@Args('id', { type: () => Int }) id: number) {
-    return this.productsService.delete(id);
+  async deleteProduct(
+    @Args('id', { type: () => Int }) id: number,
+    @Args('productName', { type: () => String }) productName: string,
+  ) {
+    return this.productsService.delete(id, productName);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

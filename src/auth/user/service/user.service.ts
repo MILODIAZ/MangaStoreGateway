@@ -1,16 +1,23 @@
 import { ClientProxy } from '@nestjs/microservices';
 import { Injectable } from '@nestjs/common';
 
-import { UserMSG } from 'src/common/constants';
+import { PaymentMSG, UserMSG } from 'src/common/constants';
+import { ProductMSG } from 'src/common/constants';
 import { ClientProxyMangaStore } from 'src/common/proxy/client-proxy';
 import { User } from '../models/user.model';
 import { userDto, updateUserDto, loginDto } from '../dto/user.dto';
+import { productQty } from '../resolver/user.resolver';
 
 @Injectable()
 export class UsersService {
   constructor(private readonly clientProxy: ClientProxyMangaStore) {}
   private clientProxyAuthorization: ClientProxy =
     this.clientProxy.clientProxyAuthorization();
+  private clientProxyCart: ClientProxy = this.clientProxy.clientProxyCart();
+  private clientProxyCatalog: ClientProxy =
+    this.clientProxy.clientProxyCatalog();
+  private clientProxyPayment: ClientProxy =
+    this.clientProxy.clientProxyPayment();
 
   async findAll(): Promise<User[]> {
     const response = await this.clientProxyAuthorization
@@ -29,34 +36,75 @@ export class UsersService {
   }
 
   async create(payload: userDto): Promise<User> {
-    const response = await this.clientProxyAuthorization
+    const response1 = await this.clientProxyAuthorization
       .send(UserMSG.CREATE, payload)
       .toPromise();
-    const { data } = response;
+    const { data } = response1;
+
+    const requestData = { username: payload.userName };
+    const response2 = await this.clientProxyCart
+      .send(UserMSG.CREATE, requestData)
+      .toPromise();
+    if (response2.data) {
+      const data = Buffer.from(response2.data, 'base64').toString('utf-8');
+      console.log(data);
+    }
     return data;
   }
 
-  async update(id: number, payload: updateUserDto): Promise<User> {
-    const response = await this.clientProxyAuthorization
-      .send(UserMSG.UPDATE, { id, payload })
+  async update(userName: string, payload: updateUserDto): Promise<User> {
+    console.log(userName);
+    console.log(payload);
+    const response1 = await this.clientProxyAuthorization
+      .send(UserMSG.UPDATE, { userName, payload })
       .toPromise();
-    const { data } = response;
+    const { data } = response1;
+
+    const requestData = {
+      currentUsername: userName,
+      newUsername: payload.userName,
+    };
+    const response2 = await this.clientProxyCart
+      .send('EDIT_USER', requestData)
+      .toPromise();
+    if (response2.data) {
+      const data = Buffer.from(response2.data, 'base64').toString('utf-8');
+      console.log(data);
+    }
     return data;
   }
 
-  async delete(id: number): Promise<User> {
-    const response = await this.clientProxyAuthorization
-      .send(UserMSG.DELETE, id)
+  async delete(userName: string): Promise<User> {
+    const response1 = await this.clientProxyAuthorization
+      .send(UserMSG.DELETE, userName)
       .toPromise();
-    const { data } = response;
+    const { data } = response1;
+
+    const requestData = { username: userName };
+    const response2 = await this.clientProxyCart
+      .send(UserMSG.DELETE, requestData)
+      .toPromise();
+    if (response2.data) {
+      const data = Buffer.from(response2.data, 'base64').toString('utf-8');
+      console.log(data);
+    }
     return data;
   }
 
   async validateUser(payload: loginDto) {
-    const response = await this.clientProxyAuthorization
+    const response1 = await this.clientProxyAuthorization
       .send('login', payload)
       .toPromise();
-    return response;
+
+    const requestData = { username: payload.userName };
+    const response2 = await this.clientProxyCart
+      .send('GET_USERBYNAME', requestData)
+      .toPromise();
+
+    const data = Buffer.from(response2.data, 'base64').toString('utf-8');
+    const jsonData = JSON.parse(data);
+
+    return { response1, jsonData };
   }
 
   async updateJWT(userName: string, token: string) {
@@ -65,5 +113,56 @@ export class UsersService {
       .toPromise();
     const { data } = response;
     return data;
+  }
+
+  async purchase(
+    userName: string,
+    itemsIDs: number[],
+    productNames: productQty[],
+  ) {
+    const response1 = await this.clientProxyCatalog
+      .send(ProductMSG.PURCHASE, productNames)
+      .toPromise();
+    console.log(response1.data);
+    return response1.data;
+
+    /*const requestData = { username: userName, cartItemIDs: itemsIDs };
+    const response2 = await this.clientProxyCart
+      .send('CREATE_ORDER', requestData)
+      .toPromise();
+    if (response2.data) {
+      const data = Buffer.from(response2.data, 'base64').toString('utf-8');
+      console.log(data);
+
+      return data;
+    }*/
+  }
+
+  async getOrders(userName: string) {
+    const requestData = { username: userName };
+    const response = await this.clientProxyCart
+      .send('GET_ORDERSBYUSERNAME', requestData)
+      .toPromise();
+    const data = Buffer.from(response.data, 'base64').toString('utf-8');
+    const jsonData = JSON.parse(data);
+    console.log(jsonData);
+    console.log(jsonData[1].items);
+    return jsonData;
+  }
+
+  async createTransaction(amount: number) {
+    const response = await this.clientProxyPayment
+      .send(PaymentMSG.TRANSACTION, amount)
+      .toPromise();
+
+    return response;
+  }
+
+  async confirmTransaction(token: string) {
+    const response = await this.clientProxyPayment
+      .send(PaymentMSG.CONFIRM_PAYMENT, token)
+      .toPromise();
+
+    return response.status;
   }
 }

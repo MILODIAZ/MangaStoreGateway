@@ -1,16 +1,10 @@
-import { InputType, Field, ArgsType, Int } from '@nestjs/graphql';
+import { InputType, Field } from '@nestjs/graphql';
 import {
   IsString,
   IsNotEmpty,
   MaxLength,
   NotEquals,
   IsOptional,
-  IsBoolean,
-  IsNumber,
-  IsPositive,
-  IsUrl,
-  Min,
-  ValidateIf,
 } from 'class-validator';
 
 @InputType()
@@ -53,7 +47,7 @@ export class userDto {
 
 @InputType()
 export class updateUserDto {
-  @Field()
+  @Field({ nullable: true })
   @IsString()
   @NotEquals(null)
   @IsNotEmpty()
@@ -61,7 +55,7 @@ export class updateUserDto {
   @MaxLength(200)
   readonly name?: string;
 
-  @Field()
+  @Field({ nullable: true })
   @IsString()
   @NotEquals(null)
   @IsNotEmpty()
@@ -69,7 +63,7 @@ export class updateUserDto {
   @IsOptional()
   readonly lastName?: string;
 
-  @Field()
+  @Field({ nullable: true })
   @IsString()
   @NotEquals(null)
   @IsNotEmpty()
@@ -77,7 +71,7 @@ export class updateUserDto {
   @IsOptional()
   readonly userName?: string;
 
-  @Field()
+  @Field({ nullable: true })
   @IsString()
   @NotEquals(null)
   @IsNotEmpty()

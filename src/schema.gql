@@ -52,9 +52,45 @@ type User {
   email: String!
 }
 
+type Order {
+  id: Int!
+}
+
 type AuthResult {
   user: User!
   jwt: String
+  cart: [CartItem!]
+}
+
+type orderUser {
+  id: Int!
+  username: String
+  cart: [CartItem!]
+}
+
+type Orden {
+  id: Int!
+  user_id: Int!
+  user: orderUser!
+  items: [CartItem!]
+}
+
+type CartProduct {
+  id: Int!
+  name: String
+}
+
+type CartItem {
+  id: Int!
+  product_id: Int!
+  product: CartProduct!
+  quantity: Int!
+  order: Int!
+}
+
+type Transaction {
+  token: String
+  url: String
 }
 
 type Query {
@@ -68,6 +104,7 @@ type Query {
   product(id: Int!): Product!
   users: [User!]!
   user(id: Int!): User!
+  getOrders(userName: String!): [Orden!]!
 }
 
 type Mutation {
@@ -83,14 +120,21 @@ type Mutation {
   addProductToCategory(categoryId: Int!, productId: Int!): Product!
   removeProductFromCategory(categoryId: Int!, productId: Int!): Product!
   createProduct(data: createProductInput!): Product!
-  updateProduct(data: updateProductInput!, id: Int!): Product!
-  deleteProduct(id: Int!): Product!
+  updateProduct(data: updateProductInput!, id: Int!, productName: String!): Product!
+  deleteProduct(id: Int!, productName: String!): Product!
   addCategoryToProduct(categoryId: Int!, productId: Int!): Category!
   removeCategoryFromProduct(categoryId: Int!, productId: Int!): Category!
+  createProductItem(data: createProductItemInput!): String!
+  updateProductItemQuantity(data: updateProductItemInput!, id: Int!): String!
+  updateProductItemOrder(data: updateProductItemInput!, id: Int!): String!
+  deleteProductItem(id: Int!, userName: String!): String!
   createUser(data: userDto!): User!
-  updateUser(data: updateUserDto!, id: Int!): User!
-  deleteUser(id: Int!): User!
+  updateUser(data: updateUserDto!, userName: String!): User!
+  deleteUser(userName: String!): User!
   login(data: loginDto!): AuthResult!
+  purchase(userName: String!, itemsIDs: [Int!]!, productNames: [productQty!]!): String!
+  createTransaction(amount: Int!): Transaction!
+  confirmTransaction(token: String!): String!
 }
 
 input branchInput {
@@ -123,6 +167,20 @@ input updateProductInput {
   isFavourite: Boolean
 }
 
+input createProductItemInput {
+  userName: String!
+  productName: String!
+  quantity: Int!
+  orderId: Int
+}
+
+input updateProductItemInput {
+  userName: String
+  productName: String
+  quantity: Int
+  orderId: Int
+}
+
 input userDto {
   name: String!
   lastName: String!
@@ -132,13 +190,18 @@ input userDto {
 }
 
 input updateUserDto {
-  name: String!
-  lastName: String!
-  userName: String!
-  email: String!
+  name: String
+  lastName: String
+  userName: String
+  email: String
 }
 
 input loginDto {
   userName: String!
   password: String!
+}
+
+input productQty {
+  name: String
+  quantity: Int!
 }
