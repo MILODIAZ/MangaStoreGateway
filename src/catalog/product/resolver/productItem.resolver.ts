@@ -60,7 +60,7 @@ export class ProductItemResolver {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  @Mutation((returns) => String)
+  @Mutation((returns) => Int)
   async updateProductItemQuantity(
     @Args('data') data: updateProductItemInput,
     @Args('id', { type: () => Int }) id: number,

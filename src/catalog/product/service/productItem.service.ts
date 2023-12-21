@@ -27,9 +27,9 @@ export class ProductItemsService {
       .toPromise();
 
     const data = Buffer.from(response.data, 'base64').toString('utf-8');
+    const id = parseInt(data, 10);
     console.log(data);
-
-    return data;
+    return id;
   }
 
   async updateQuantity(id: number, payload: updateProductItemInput) {

@@ -104,7 +104,20 @@ export class UsersService {
     const data = Buffer.from(response2.data, 'base64').toString('utf-8');
     const jsonData = JSON.parse(data);
 
-    return { response1, jsonData };
+    const cartList = jsonData.cart.map((item) => ({
+      id: item.id,
+      product: item.product.name,
+      quantity: item.quantity,
+      orderId: item.order_id,
+    }));
+
+    let response3 = await this.clientProxyCatalog
+      .send(ProductMSG.GET_PRICES, cartList)
+      .toPromise();
+
+    response3 = response3.data.filter((item) => item.orderId === 0);
+
+    return { response1, response3 };
   }
 
   async updateJWT(userName: string, token: string) {
@@ -123,19 +136,16 @@ export class UsersService {
     const response1 = await this.clientProxyCatalog
       .send(ProductMSG.PURCHASE, productNames)
       .toPromise();
-    console.log(response1.data);
-    return response1.data;
 
-    /*const requestData = { username: userName, cartItemIDs: itemsIDs };
+    const requestData = { username: userName, cartItemIDs: itemsIDs };
     const response2 = await this.clientProxyCart
       .send('CREATE_ORDER', requestData)
       .toPromise();
     if (response2.data) {
       const data = Buffer.from(response2.data, 'base64').toString('utf-8');
       console.log(data);
-
-      return data;
-    }*/
+    }
+    return response1.data;
   }
 
   async getOrders(userName: string) {

@@ -24,8 +24,31 @@ class AuthResult {
   jwt: string;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  @Field((type) => [CartItem], { nullable: true }) // Cambiado a [Object]
-  cart: CartItem[];
+  @Field((type) => [CartItemPrice], { nullable: true }) // Cambiado a [Object]
+  cart: CartItemPrice[];
+}
+
+@ObjectType()
+class CartItemPrice {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  @Field((type) => Int)
+  id: number;
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  @Field((type) => String)
+  product: string;
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  @Field((type) => Int)
+  quantity: number;
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  @Field((type) => Int)
+  total: number;
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  @Field((type) => Int)
+  orderId: number;
 }
 
 @ObjectType()
@@ -169,7 +192,7 @@ export class UsersResolver {
   async login(@Args('data') data: loginDto) {
     const result = await this.usersService.validateUser(data);
     const user = result.response1;
-    const cart = result.jsonData.cart;
+    const cart = result.response3;
     const jwt = this.authService.generateJWT(user);
     if (jwt.access_token) {
       const userName = data.userName;
@@ -177,7 +200,7 @@ export class UsersResolver {
       user.jwt = jwt.access_token;
       await this.usersService.updateJWT(userName, token);
     }
-    console.log(cart);
+
     return { user, jwt: jwt.access_token, cart };
   }
 

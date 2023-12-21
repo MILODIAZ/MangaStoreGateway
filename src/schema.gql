@@ -59,7 +59,15 @@ type Order {
 type AuthResult {
   user: User!
   jwt: String
-  cart: [CartItem!]
+  cart: [CartItemPrice!]
+}
+
+type CartItemPrice {
+  id: Int!
+  product: String!
+  quantity: Int!
+  total: Int!
+  orderId: Int!
 }
 
 type orderUser {
@@ -125,7 +133,7 @@ type Mutation {
   addCategoryToProduct(categoryId: Int!, productId: Int!): Category!
   removeCategoryFromProduct(categoryId: Int!, productId: Int!): Category!
   createProductItem(data: createProductItemInput!): String!
-  updateProductItemQuantity(data: updateProductItemInput!, id: Int!): String!
+  updateProductItemQuantity(data: updateProductItemInput!, id: Int!): Int!
   updateProductItemOrder(data: updateProductItemInput!, id: Int!): String!
   deleteProductItem(id: Int!, userName: String!): String!
   createUser(data: userDto!): User!
